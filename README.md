@@ -2,10 +2,16 @@
 
 
 Integrantes:
-    - 
+
+    -
+
     - LoximtoMedina
+
     -
+
     -
+
     -
+    
 
 Instalación formal de Django
