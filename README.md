@@ -7,7 +7,7 @@ Integrantes:
 
     - LoximtoMedina
 
-    -
+    - yecomprofessional07-hash
 
     -
 
