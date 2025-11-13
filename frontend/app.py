@@ -9,15 +9,12 @@ with st.sidebar:
     # Perfil y logout
     col1, col2 = st.columns([4, 1])
     with col1:
-        st.markdown("""
-            <div>
-                <img src="sources/xd.jpg" style="
-                    width: 30px;
-                    height: 30px;
-                    border-radius: 50%;
-                ">
-                <b>username</b>
-            </div>""", unsafe_allow_html=True)
+        colSub1, colSub2 = st.columns([5, 15])
+        with colSub1:
+            st.image("sources/xd.jpg", width=50)
+        with colSub2:
+            st.markdown("#### **user**")
+
     with col2:
         st.button("←", key="logout", help="Cerrar sesión")
     
@@ -43,26 +40,32 @@ with st.sidebar:
     st.button("Acerca de", key="info", use_container_width=True)
     st.button("Configuración", key="config", use_container_width=True)
 
-#Contenido principal
-col_main, col_actions = st.columns([4, 1])
+#====================================== Contenido principal ======================================#
+#Primera fila: Título
+st.markdown("## GESTOR DE TRADING BASADO EN MACHINE LEARNING")
 
-with col_main:
-    st.markdown("## GESTOR DE TRADING BASADO EN MACHINE LEARNING")
-    
+st.markdown("---")
+
+#Segunda fila: Histograma + botones de acción
+col_histograma, col_actions = st.columns([4, 1])
+with col_histograma:
     # Histograma
-    
-    # Métricas
-    col_m1, col_m2, col_m3 = st.columns(3)
-    with col_m1:
-        st.metric(label="Métrica 1", value=f"---")
-    with col_m2:
-        st.metric(label="Métrica 2", value=f"---")
-    with col_m3:
-        st.metric(label="Métrica 3", value=f"---")
+    pass
 
-#Botones de acción
 with col_actions:
+    #Botones de acción
     st.markdown("### Botones de Acción")
     st.button("Comprar", use_container_width=True)
     st.button("Vender", use_container_width=True)
     st.button("Mantener", use_container_width=True)
+
+st.markdown("---")
+
+#Tercera fila: Métricas
+col_m1, col_m2, col_m3 = st.columns(3)
+with col_m1:
+    st.metric(label="Métrica 1", value=f"---")
+with col_m2:
+    st.metric(label="Métrica 2", value=f"---")
+with col_m3:
+    st.metric(label="Métrica 3", value=f"---")
