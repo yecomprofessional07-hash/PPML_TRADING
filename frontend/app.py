@@ -4,7 +4,7 @@ import pandas as pd
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
 
-# --- SIDEBAR IZQUIERDA ---
+# Sidebar: Información del usuario (Nombre de usuario, foto de perfil, presupuesto y acciones en uso) + botones relevantes (acerca de, tema, cerrar sesión, botón de función indeterminada)
 with st.sidebar:
     # Perfil y logout
     col1, col2 = st.columns([4, 1])
@@ -32,9 +32,9 @@ with st.sidebar:
     st.markdown("---")
     
     # Botones inferiores
-    tema_switch = st.toggle("Cambiar Tema", key="tema")
-    st.button("Información", key="info")
     st.button("Configuración", key="config")
+    tema_switch = st.toggle("Cambiar Tema", key="tema")
+    st.button("Acerca de", key="info")
 
 #Contenido principal
 col_main, col_actions = st.columns([4, 1])
