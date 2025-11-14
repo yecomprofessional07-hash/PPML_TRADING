@@ -4,9 +4,12 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+from .solicitudes import enviar
 
 # 1. Descargar datos
-datos = yf.download('AAPL', period='2y')
+empresa = enviar("Verizon")
+
+datos = yf.download(empresa, period='2y')
 
 # 2. Calcular RSI
 def calcular_rsi(precios, window=14):
