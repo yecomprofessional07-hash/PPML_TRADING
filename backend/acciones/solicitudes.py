@@ -122,7 +122,7 @@ empresas = {
     #else:
         #return None
 
-def recibie():
+def recibir():
     decision, confianza, precio = ML_estados()
     return decision, confianza, precio
 

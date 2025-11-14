@@ -1,16 +1,13 @@
 import streamlit as st
 import pandas as pd
-from backend.acciones.solicitudes import recibie
+from backend.acciones.solicitudes import recibir
 
 
 #He importado el ML y colocado en las metricas
-decision, confianza, precio = recibie()
-
+decision, confianza, precio = recibir()
 
 #He agregado esta funcion con el objetivo de proporcionar
 # el csv users el cual contiene usersname y password
-
-
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
