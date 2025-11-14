@@ -4,9 +4,12 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+#from .solicitudes import enviar
 
 # 1. Descargar datos
-datos = yf.download('AAPL', period='2y')
+empresa = 'VZ'
+
+datos = yf.download(empresa, period='2y')
 
 # 2. Calcular RSI
 def calcular_rsi(precios, window=14):
@@ -57,3 +60,13 @@ precio_actual = float(datos_limpios['Close'].iloc[-1])
 print(f"🎯 DECISIÓN DEL MODELO: {decisiones[prediccion]}")
 print(f"📊 CONFIANZA: {probabilidades[prediccion]:.2%}")
 print(f"💰 Precio actual: ${precio_actual:.2f}")
+
+#Creando Variables derivadas de la prediccion
+decision = decisiones[prediccion]
+confianza = probabilidades[prediccion]
+precio = precio_actual
+
+#Comunicando estados 
+
+def ML_estados():
+    return decision, confianza, precio
