@@ -1,5 +1,16 @@
 import streamlit as st
 import pandas as pd
+from backend.acciones.solicitudes import recibie
+
+
+#He importado el ML y colocado en las metricas
+decision, confianza, precio = recibie()
+
+
+#He agregado esta funcion con el objetivo de proporcionar
+# el csv users el cual contiene usersname y password
+
+
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
@@ -16,7 +27,7 @@ with st.sidebar:
                     height: 30px;
                     border-radius: 50%;
                 ">
-                <b>username</b>
+                <b>usernam</b>
             </div>""", unsafe_allow_html=True)
     with col2:
         st.button("←", key="logout", help="Cerrar sesión")
@@ -54,11 +65,11 @@ with col_main:
     # Métricas
     col_m1, col_m2, col_m3 = st.columns(3)
     with col_m1:
-        st.metric(label="Métrica 1", value=f"---")
+        st.metric(label="🎯 DECISIÓN DEL MODELO", value=f"{decision}")
     with col_m2:
-        st.metric(label="Métrica 2", value=f"---")
+        st.metric(label="📊 CONFIANZA", value=f"{confianza:.2%}")
     with col_m3:
-        st.metric(label="Métrica 3", value=f"---")
+        st.metric(label="💰 Precio actual", value=f"{precio:.2f}")
 
 #Botones de acción
 with col_actions:

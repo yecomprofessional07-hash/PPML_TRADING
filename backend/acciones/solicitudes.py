@@ -1,5 +1,5 @@
 import pandas as pd
-from ..usuarios.recibiendo import recibir
+from .BuscarAcciones import ML_estados
 empresas = {
     # 🔴 TECNOLOGÍA (25 empresas)
     "Apple": "AAPL",
@@ -114,11 +114,15 @@ empresas = {
     "Charter Communications": "CHTR"
 }
 
-def enviar(self):
-    selector= self
-    if selector in empresas.keys():
-        ident = empresas[selector]
-        return ident
-    else:
-        return None
+#def enviar(self):
+    #selector= self
+    #if selector in empresas.keys():
+        #ident = empresas[selector]
+        #return ident
+    #else:
+        #return None
+
+def recibie():
+    decision, confianza, precio = ML_estados()
+    return decision, confianza, precio
 

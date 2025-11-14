@@ -15,7 +15,8 @@ def cargar_csv(nombre_archivo):
 datos = cargar_csv("users.csv")
 print(datos)
 
-
+#Inicialice la variable para evitar errores
+#usuario_name = st.session_state.get('username', 'Invitado')
 # Uso
 #df = cargar_csv('empresas.csv')
 # --- Configuración general de la página ---
@@ -100,6 +101,7 @@ with st.container():
                                      (datos['password'].astype(str)==contraseña)]
             if not usuario_validado.empty:
                 st.success(f"Bienvenido, {usuario} 👋")
+                bandera = True
             else:
                 st.error("Usuario o contraseña invalidos")
         else:
@@ -112,3 +114,5 @@ with st.container():
     )
 
     st.markdown("</div>", unsafe_allow_html=True)
+
+
