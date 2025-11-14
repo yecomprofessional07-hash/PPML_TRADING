@@ -1,7 +1,23 @@
 import streamlit as st
 import pandas as pd
+import pathlib 
+
+#He agregado esta funcion con el objetivo de proporcionar
+# el csv users el cual contiene usersname y password
+#importe pathlib para darle la ruta a la funcion pd.read_csv
+
+def cargar_csv(nombre_archivo):
+    """Carga CSV desde data/ independientemente de dónde se ejecute"""
+    proyecto_root = pathlib.Path(__file__).parent.parent.parent # Subir a PPML_TRADING
+    ruta_csv = proyecto_root / 'data' / nombre_archivo
+    print(f"Intentando cargar archivo desde: {ruta_csv}")
+    return pd.read_csv(ruta_csv)
+datos = cargar_csv("users.csv")
+print(datos)
 
 
+# Uso
+#df = cargar_csv('empresas.csv')
 # --- Configuración general de la página ---
 st.set_page_config(
     page_title="Login - Gestor de Trading basado en ML",
@@ -80,9 +96,14 @@ with st.container():
 
     if login_btn:
         if usuario and contraseña:
-            st.success(f"Bienvenido, {usuario} 👋")
+            usuario_validado = datos[(datos['username']==usuario) & 
+                                     (datos['password'].astype(str)==contraseña)]
+            if not usuario_validado.empty:
+                st.success(f"Bienvenido, {usuario} 👋")
+            else:
+                st.error("Usuario o contraseña invalidos")
         else:
-            st.error("Por favor, ingrese usuario y contraseña.")
+            st.error("Por favor, ingrese Usuario y Contraseña")
 
     # Texto de registro
     st.markdown(
