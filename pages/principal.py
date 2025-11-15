@@ -294,8 +294,3 @@ with col3:
     st.metric(label="Precio actual", value=f"{precio:.2f}")
 
 #==============Funciones de envio=========#
-
-
-def buscador():
-    if busqueda in empresas.keys():
-        return busqueda
