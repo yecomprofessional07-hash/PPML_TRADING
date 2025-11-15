@@ -3,39 +3,46 @@ import pandas as pd
 
 # --- Configuración general ---
 st.set_page_config(
-    page_title="Login - Gestor de Trading basado en ML",
-    page_icon="💹",
+    page_title="Gestor de Trading basado en ML",
     layout="centered"
 )
 
+st.markdown("""
+    <style>
+        section[data-testid="stMain"] {
+            overflow: hidden !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
-# --- Contenedor central sin HTML ---
-with st.container():
-    # Centrado: usamos columnas vacías
-    col1, col2, col3 = st.columns([1, 2, 1])
+col1, col2, col3 = st.columns([4, 10, 4])
+with col2:
+    with st.container(border = True):
+        # Título
+        st.markdown(
+            "<h3 style='text-align: center;'>GESTOR DE TRADING BASADO EN ML</h3>",
+            unsafe_allow_html=True
+        )
 
-    with col2:
-        st.markdown("## Gestor de Trading basado en ML")
+        st.write("---")
 
-        # Tarjeta simulada con Streamlit
-        with st.container(border=True):
-            
-            usuario = st.text_input("Usuario", placeholder="Ingrese su usuario")
-            contraseña = st.text_input("Contraseña", type="password", placeholder="Ingrese su contraseña")
-            
-            st.write("")  # Espacio
-            
-            st.button("¿Olvidó su contraseña?")
+        # Imputs de usuario
+        usuario = st.text_input("Usuario", placeholder="Ingrese su usuario")
+        st.write("")
+        contraseña = st.text_input("Contraseña", type="password", placeholder="Ingrese su contraseña")
+        st.write("")
+        st.write("")
 
-            login_btn = st.button("LOGIN")
+        # Botón de inicio de sesión
+        login_btn = st.button("Iniciar sesión", type="primary", use_container_width=True)
 
-            if login_btn:
-                if usuario and contraseña:
-                    st.success(f"Bienvenido, {usuario} 👋")
-                else:
-                    st.error("Por favor, ingrese usuario y contraseña.")
+        # Lógica de autenticación
+        if login_btn:
+            if usuario and contraseña:
+                st.success(f"¡Bienvenido!, {usuario}")
+            else:
+                st.error("Por favor, ingrese usuario y contraseña.")
 
-            st.write("---")
+        st.write("---")
 
-            st.write("¿No tienes una cuenta?")
-            st.link_button("Regístrate", "#")
+        st.write("¿No tienes cuenta? [Regístrate.](https://google.com)")
