@@ -1,7 +1,7 @@
+# Librerías
 import streamlit as st
 import pandas as pd
 from model.solicitudes import recibir
-
 
 #He importado el ML y colocado en las metricas
 decision, confianza, precio = recibir()
@@ -11,6 +11,15 @@ decision, confianza, precio = recibir()
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
+
+# CSS para ocultar la barra de desplazamiento horizontal
+st.markdown("""
+    <style>
+        section[data-testid="stMain"] {
+            overflow: hidden !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # Sidebar: Información del usuario (Nombre de usuario, foto de perfil, presupuesto y acciones en uso) + botones relevantes (acerca de, tema, cerrar sesión, botón de función indeterminada)
 with st.sidebar:
