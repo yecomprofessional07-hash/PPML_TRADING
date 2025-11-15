@@ -1,10 +1,10 @@
-#================================== Importaciones/Librerías ==================================#
+#================================= Importaciones/Librerías ================================#
 from model.solicitudes import recibir
 import streamlit as st
 import pandas as pd
 import random
 
-#================================== Variables Globales ==================================#
+#=================================== Variables Globales ===================================#
 
 decision, confianza, precio = recibir()     # Valores dinámicos: se importa el ML y con una función se obtienen los valores de métricas
 userName = "user"                           # Valor dinámico: nombre de usuario
@@ -12,10 +12,14 @@ budget = 0                                  # Valor dinámico: presupuesto del u
 moneyInStocks = 0                           # Valor dinámico: dinero invertido en acciones
 df = pd.DataFrame()                         # Valor dinámico: DataFrame para almacenar los datos del histograma
 
+#=============================== Funciones para los botones =============?=================#
+def popUp():
+    pass
+
 #=============================== Configuración de la página ===============================#
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
 
-#====================================== Barra lateral ======================================#
+#====================================== Barra lateral =====================================#
 # Sidebar: Información del usuario (Nombre de usuario, foto de perfil, horizonte de tiempo, multiselectbox de acciones, presupuesto y acciones en uso) + botones relevantes (acerca de, tema, cerrar sesión, botón de función indeterminada)
 with st.sidebar:
     # Perfil y logout
