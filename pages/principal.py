@@ -5,20 +5,18 @@ import random
 from model.solicitudes import recibir
 
 #================================== Variables Globales ==================================#
-decision, confianza, precio = recibir() #He importado el ML y colocado en las metricas
-userName = "user"   # valor dinámico: nombre de usuario
-budget = 0          # valor dinámico: presupuesto del usuario
-moneyInStocks = 0   # valor dinámico: dinero invertido en acciones
-df = pd.DataFrame() # DataFrame para almacenar los datos del histograma
 
-#He agregado esta funcion con el objetivo de proporcionar
-#el csv users el cual contiene usersname y password
+decision, confianza, precio = recibir()     # Valores dinámicos: se importa el ML y con una función se obtienen los valores de métricas
+userName = "user"                           # valor dinámico: nombre de usuario
+budget = 0                                  # valor dinámico: presupuesto del usuario
+moneyInStocks = 0                           # valor dinámico: dinero invertido en acciones
+df = pd.DataFrame()                         # DataFrame para almacenar los datos del histograma
 
 #=============================== Configuración de la página ===============================#
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
 
 #====================================== Barra lateral ======================================#
-# Sidebar: Información del usuario (Nombre de usuario, foto de perfil, presupuesto y acciones en uso) + botones relevantes (acerca de, tema, cerrar sesión, botón de función indeterminada)
+# Sidebar: Información del usuario (Nombre de usuario, foto de perfil, horizonte de tiempo, multiselectbox de acciones, presupuesto y acciones en uso) + botones relevantes (acerca de, tema, cerrar sesión, botón de función indeterminada)
 with st.sidebar:
     # Perfil y logout
     col1, col2 = st.columns([4, 1])
@@ -36,7 +34,7 @@ with st.sidebar:
     
     st.markdown("---")
     
-    # Acción en uso
+    # Acción/es en uso
     accion = st.multiselect("Acciones en uso", ['AAPL','GOOG','AMZN','TSLA','META'], default=['AAPL'])
 
     # Horizonte de tiempo
@@ -44,17 +42,17 @@ with st.sidebar:
 
     st.markdown("---")
 
-    # Presupuesto y dinero en acciones
+    # Presupuesto
     st.markdown("#### Presupuesto")
     st.markdown(f"L. {budget:,}")
     
+    # Dinero en acciones
     st.markdown("#### Dinero en Acciones")
     st.markdown(f"L. {moneyInStocks:,}")
     
     st.markdown("---")
     
     # Botones inferiores
-    tema_switch = st.toggle("Cambiar Tema", key="tema")
     st.button("Acerca de", key="info", use_container_width=True)
     st.button("Configuración", key="config", use_container_width=True)
 
@@ -65,13 +63,11 @@ st.markdown("## GESTOR DE TRADING BASADO EN MACHINE LEARNING")
 st.markdown("---")
 
 #Segunda fila: Histograma + botones de acción
-col_histograma, col_actions = st.columns([4, 1])
-with col_histograma:
+col1, col2 = st.columns([4, 1])
+with col1:
     # Histograma
     st.line_chart(df, use_container_width=True)
-
-#Botones de acción
-with col_actions:
+with col2:
     #Botones de acción
     st.markdown("#### Botones de Acción")
     st.button("Comprar", use_container_width=True)
@@ -81,10 +77,13 @@ with col_actions:
 st.markdown("---")
 
 #Tercera fila: Métricas
-col_m1, col_m2, col_m3 = st.columns(3)
-with col_m1:
-        st.metric(label="DECISIÓN DEL MODELO", value=f"{decision}")
-with col_m2:
+col1, col2, col3 = st.columns(3)
+with col1:
+    # Métrica 1
+    st.metric(label="DECISIÓN DEL MODELO", value=f"{decision}")
+with col2:
+    # Métrica 2
     st.metric(label="CONFIANZA", value=f"{confianza:.2%}")
-with col_m3:
+with col3:
+    # Métrica 3
     st.metric(label="Precio actual", value=f"{precio:.2f}")
