@@ -2,7 +2,17 @@
 import streamlit as st
 import pandas as pd
 import random
+import yfinance as yf
+import altair as alt
 from model.solicitudes import recibir
+
+#diccionario para tiempos del histograma
+
+dicc_tiempo ={
+    '1 Mes':'1mo', '3 Meses':'3mo', '6 Meses':'6mo', 
+    '1 Año':'1y', '5 Años':'5y', '10 Años':'10y', 
+    '20 Años':'20y'
+}
 
 #================================== Variables Globales ==================================#
 decision, confianza, precio = recibir() #He importado el ML y colocado en las metricas
@@ -68,6 +78,37 @@ st.markdown("---")
 col_histograma, col_actions = st.columns([4, 1])
 with col_histograma:
     # Histograma
+    if time in dicc_tiempo.keys():
+        periodo = dicc_tiempo[time]
+    else:
+        periodo = '6mo'
+
+    datos = yf.download(accion, period=periodo)
+    datos = datos.reset_index().rename(columns={'Date': 'date'})
+        
+    # Gráfico OHLC simple
+    chart = alt.Chart(datos).mark_rule().encode(
+        x='date:T',
+        y='Low:Q',
+        y2='High:Q',
+        color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
+    ) + alt.Chart(datos).mark_bar().encode(
+        x='date:T',
+        y='Open:Q',
+        y2='Close:Q',
+        color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
+    ).properties(
+        title=f'Gráfico OHLC - ({time} )',
+        width=600, 
+        height=400
+    )
+
+    # Mostrar en Streamlit
+    st.altair_chart(chart, use_container_width=True)
+
+    # También mostrar los datos en tabla
+    #st.write("### Datos OHLC")
+    #st.dataframe(datos)
     st.line_chart(df, use_container_width=True)
 
 #Botones de acción
