@@ -13,8 +13,21 @@ moneyInStocks = 0                           # Valor dinámico: dinero invertido 
 df = pd.DataFrame()                         # Valor dinámico: DataFrame para almacenar los datos del histograma
 
 #=============================== Funciones para los botones =============?=================#
+# Función para la ventana emergente
 def popUp():
     pass
+
+# Función para el botón de comprar
+def buyActions():
+    st.toast("Has comprado acciones con éxito.")
+
+# Función para el botón de vender
+def sellActions():
+    st.toast("Haz vendido tus acciones con éxito.")
+
+# Función para el botón de mantener
+def standBy(): 
+    st.toast("Has decidido mantener tus acciones.")
 
 #=============================== Configuración de la página ===============================#
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
@@ -74,9 +87,12 @@ with col1:
 with col2:
     #Botones de acción
     st.markdown("#### Botones de Acción")
-    st.button("Comprar", use_container_width=True)
-    st.button("Vender", use_container_width=True)
-    st.button("Mantener", use_container_width=True)
+    if st.button("Comprar", use_container_width=True):
+        buyActions()
+    if st.button("Vender", use_container_width=True):
+        sellActions()
+    if st.button("Mantener", use_container_width=True):
+        standBy()
 
 st.markdown("---")
 
