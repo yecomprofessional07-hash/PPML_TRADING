@@ -1,6 +1,7 @@
 #================================= Importaciones/Librerías ================================#
 import streamlit as st
 import pandas as pd
+import time
 
 #=================================== Variables Globales ===================================#
 userName = "user"                           # Valor dinámico: nombre de usuario
@@ -13,13 +14,13 @@ df = pd.DataFrame()                         # Valor dinámico: DataFrame con inf
 st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
 
 #====================================== Contenido principal ======================================#
-# Primera fila: Título
+# ---> Primera fila: Título
 st.markdown(f"<h1 style='text-align: center;'>GESTOR DE TRADING BASADO EN ML</h1>", unsafe_allow_html=True)
 
 # Separador
 st.markdown("---")
 
-# Segunda fila: Información del usuario
+# --->Segunda fila: Información del usuario
 col1, col2, col3 = st.columns([2, 0.5, 2])
 with col1:
     # Primera columna: Imagen de perfil
@@ -34,23 +35,73 @@ with col3:
 # Separador
 st.markdown("---")
 
-
+st.markdown("#### Lista de empresas en su portafolio:")
 
 # Separador
 st.markdown("---")
 
-# Tercera fila: Edición de configuraciónes
-if st.button("Agregar Presupuesto", use_container_width=True):
+# ---> Tercera fila: Edición de configuraciónes
+# Inicializa la variables de sesión para mostrar/ocultar los contenedores
+if "show_containerBudget" not in st.session_state:
+    st.session_state.show_containerBudget = False
+if "show_containerName" not in st.session_state:
+    st.session_state.show_containerName = False
+
+# Botón para mostrar/ocultar el contenedor de agregar presupuesto
+col1, col2, col3 = st.columns(3)
+with col1:
+    if st.button("Agregar presupuesto", use_container_width=True, key="btnBudget"):
+        st.session_state.show_containerBudget = not st.session_state.show_containerBudget
+with col2:
+    if st.button("Cambiar nombre", use_container_width=True, key="btnName"):
+        st.session_state.show_containerName = not st.session_state.show_containerName
+with col3:
+    if st.button("Función Experimental", use_container_width=True, key="btnExperimental"):
+        pass
+
+if st.session_state.show_containerBudget:
     with st.container(border=True):
+        # Spinbox que permite agregar presupuesto
         newBudget = st.number_input("Monto a agregar", min_value=1000.00, value=1500.00, format="%.2f", step=1.00)
-        if st.button("Confirmar"):
+        if st.button("Confirmar", key="confirmBudget"):
+            # Actualiza el presupuesto
             budget += newBudget
+
+            # Muestra un mensaje de éxito
             st.success(f"Se han agregado L. {newBudget} a su presupuesto.")
-            st.experimental_rerun()
+
+            # Oculta el contenedor después de confirmar
+            st.session_state.show_containerBudget = False
+
+            # Espera un segundo y vuelve a cargar la página para actualizar los valores
+            time.sleep(1)
+            st.rerun()
+
+if st.session_state.show_containerName:
+    with st.container(border=True):
+        # Campo de texto para cambiar el nombre de usuario
+        newName = st.text_input("Ingrese su nuevo nombre de usuario", max_chars=20)
+        if st.button("Confirmar", key="confirmName"):
+            if newName.strip() != "":
+                # Actualiza el nombre de usuario
+                userName = newName
+
+                # Muestra un mensaje de éxito
+                st.success(f"Su nombre de usuario ha sido cambiado a {newName}.")
+
+                # Oculta el contenedor después de confirmar
+                st.session_state.show_containerName = False
+
+                # Espera un segundo y vuelve a cargar la página para actualizar los valores
+                time.sleep(1)
+                st.rerun()
+            else:
+                st.warning("El nombre de usuario no puede estar vacío.")
 
 # Separador
 st.markdown("---")
 
+# ---> Cuarta fila
 # botón para volver a principal.py
 if st.button("Volver", use_container_width=True):
     st.switch_page("pages/principal.py")
