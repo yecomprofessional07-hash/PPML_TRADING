@@ -5,10 +5,6 @@ import pandas as pd
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
 
-# Creamos un contenedor vacío para mostrar el mensaje de error del monto
-# Esto permite que el error esté arriba del botón.
-error_placeholder = st.empty() 
-
 col1, col2, col3 = st.columns([4, 10, 4])
 with col2:
     with st.container(border = True):
@@ -32,22 +28,18 @@ with col2:
         st.write("")
 
         # Entrada de capital
-        monto = st.text_input ("Monto Inicial",placeholder="Ingrese un monto inicial (solo números)" )
+        monto = st.number_input("Monto Inicial", min_value=1000.00, value=1500.00, format="%.2f", step=1.00)
+        
 
         # Espaciado
         st.write("")
         st.write("")
  
-        # Botón de inicio de sesión
-        login_btn = st.button("Registrar Usuario", type="primary", use_container_width=True)
- 
         # Lógica de autenticación
-        if login_btn:
-            # Limpiamos cualquier error anterior
-            error_placeholder.empty()
+        if st.button("Registrar Usuario", type="primary", use_container_width=True):
             # 1. Validación de campos obligatorios
             if not user or not password:
-                error_placeholder.error("Por favor, ingrese usuario y contraseña.")
+                st.toast("Por favor, ingrese usuario y contraseña.")
             else:
                 # 2. Validación de que el MONTO es numérico
                 try:
@@ -57,7 +49,7 @@ with col2:
                     st.switch_page("pages/principal.py") 
                 except ValueError:
                     # Si falla la conversión (significa que hay letras o símbolos no numéricos)
-                    error_placeholder.error("Error en 'Monto Inicial': Por favor, ingrese solo números.")
+                    st.toast("Por favor, ingrese solo números.")
 
         # Separador
         st.write("---")

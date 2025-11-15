@@ -44,7 +44,7 @@ with col2:
             if user and password:
                 st.switch_page("pages/principal.py")
             else:
-                st.error("Por favor, ingrese usuario y contraseña.")
+                st.toast("Por favor, ingrese usuario y contraseña.")
 
         # Separador
         st.write("---")

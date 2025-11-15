@@ -170,7 +170,8 @@ with st.sidebar:
         with colSub2:
             st.markdown(f"#### **{userName}**")
     with col2:
-        st.page_link("app.py", label="←")
+        if st.button("←", use_container_width=True):
+            st.switch_page("app.py")
     
     st.markdown("---")
 
@@ -193,8 +194,10 @@ with st.sidebar:
     st.markdown("---")
     
     # Botones inferiores
-    st.page_link("pages/aboutUs.py", label="Acerca de")
-    st.page_link("pages/settings.py", label="Configuración")
+    if st.button("Acerca de Nosotros", use_container_width=True):
+        st.switch_page("pages/aboutUs.py")
+    if st.button("Configuración", use_container_width=True):
+        st.switch_page("pages/settings.py")
 
 #====================================== Contenido principal ======================================#
 #Primera fila: Título
