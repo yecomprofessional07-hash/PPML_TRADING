@@ -1,8 +1,8 @@
 #================================== Importaciones/Librerías ==================================#
+from model.solicitudes import recibir
 import streamlit as st
 import pandas as pd
 import random
-from model.solicitudes import recibir
 
 #================================== Variables Globales ==================================#
 
