@@ -7,10 +7,10 @@ from model.solicitudes import recibir
 #================================== Variables Globales ==================================#
 
 decision, confianza, precio = recibir()     # Valores dinámicos: se importa el ML y con una función se obtienen los valores de métricas
-userName = "user"                           # valor dinámico: nombre de usuario
-budget = 0                                  # valor dinámico: presupuesto del usuario
-moneyInStocks = 0                           # valor dinámico: dinero invertido en acciones
-df = pd.DataFrame()                         # DataFrame para almacenar los datos del histograma
+userName = "user"                           # Valor dinámico: nombre de usuario
+budget = 0                                  # Valor dinámico: presupuesto del usuario
+moneyInStocks = 0                           # Valor dinámico: dinero invertido en acciones
+df = pd.DataFrame()                         # Valor dinámico: DataFrame para almacenar los datos del histograma
 
 #=============================== Configuración de la página ===============================#
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
