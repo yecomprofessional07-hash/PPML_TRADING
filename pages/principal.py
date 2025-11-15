@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
-from model.solicitudes import recibie
+from model.solicitudes import recibir
 
 
 #He importado el ML y colocado en las metricas
-decision, confianza, precio = recibie()
+decision, confianza, precio = recibir()
 
 #He agregado esta funcion con el objetivo de proporcionar
 # el csv users el cual contiene usersname y password
