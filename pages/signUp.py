@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 
 # Configuración de la página
-st.set_page_config(page_title="Registro", layout="centered")
+st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
 
 # Creamos un contenedor vacío para mostrar el mensaje de error del monto
 # Esto permite que el error esté arriba del botón.

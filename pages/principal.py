@@ -135,6 +135,7 @@ empresas = {
 userName = "user"                           # Valor dinámico: nombre de usuario
 budget = 0                                  # Valor dinámico: presupuesto del usuario
 moneyInStocks = 0                           # Valor dinámico: dinero invertido en acciones
+image = 1                                   # Valor dinámico: imagen de perfil del usuario
 df = pd.DataFrame()                         # Valor dinámico: DataFrame para almacenar los datos del histograma
 
 #=============================== Funciones para los botones =============?=================#
@@ -155,7 +156,7 @@ def standBy():
     st.toast("Has decidido mantener tus acciones.")
 
 #=============================== Configuración de la página ===============================#
-st.set_page_config(page_title="Gestor de Trading", layout="wide")
+st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="wide")
 
 #====================================== Barra lateral =====================================#
 # Sidebar: Información del usuario (Nombre de usuario, foto de perfil, horizonte de tiempo, multiselectbox de acciones, presupuesto y acciones en uso) + botones relevantes (acerca de, tema, cerrar sesión, botón de función indeterminada)
@@ -165,7 +166,7 @@ with st.sidebar:
     with col1:
         colSub1, colSub2 = st.columns([5, 15])
         with colSub1:
-            st.image(f"sources/profileImage{random.randint(1,3)}.png", width=40)
+            st.image(f"sources/profileImage{image}.png", width=40)
         with colSub2:
             st.markdown(f"#### **{userName}**")
     with col2:
@@ -192,8 +193,8 @@ with st.sidebar:
     st.markdown("---")
     
     # Botones inferiores
-    st.button("Acerca de", key="info", use_container_width=True)
-    st.button("Configuración", key="config", use_container_width=True)
+    st.page_link("pages/aboutUs.py", label="Acerca de")
+    st.page_link("pages/settings.py", label="Configuración")
 
 #====================================== Contenido principal ======================================#
 #Primera fila: Título

@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 
 # Configuración de la página
-st.set_page_config(page_title="Gestor de Trading basado en ML", layout="centered")
+st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
 
 # CSS para ocultar la barra de desplazamiento horizontal
 st.markdown("""
