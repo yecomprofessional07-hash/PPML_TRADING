@@ -44,7 +44,7 @@ with col2:
         # Lógica de autenticación
         if login_btn:
             if user and password:
-                st.switch_page("pages/principal.py")
+                st.switch_page("principal.py")
             else:
                 st.error("Por favor, ingrese usuario y contraseña.")
 
