@@ -24,12 +24,16 @@ with col2:
             unsafe_allow_html=True
         )
 
+        # Separador
         st.write("---")
 
-        # Imputs de usuario
-        usuario = st.text_input("Usuario", placeholder="Ingrese su usuario")
+        # Imput: user
+        user = st.text_input("Usuario", placeholder="Ingrese su usuario")
+        # Espaciado
         st.write("")
-        contraseña = st.text_input("Contraseña", type="password", placeholder="Ingrese su contraseña")
+
+        password = st.text_input("Contraseña", type="password", placeholder="Ingrese su contraseña")
+        # Espaciado
         st.write("")
         st.write("")
 
@@ -38,11 +42,18 @@ with col2:
 
         # Lógica de autenticación
         if login_btn:
-            if usuario and contraseña:
-                st.success(f"¡Bienvenido!, {usuario}")
+            if user and password:
+                st.success(f"¡Bienvenido!, {user}")
+                st.switch_page("pages/principal.py")
             else:
                 st.error("Por favor, ingrese usuario y contraseña.")
 
+        # Separador
         st.write("---")
 
-        st.write("¿No tienes cuenta? [Regístrate.](https://google.com)")
+        # Enlace de registro
+        subcol1, subcol2 = st.columns([1, 1])
+        with subcol1:
+            st.write("¿No tienes una cuenta?")
+        with subcol2:
+            st.page_link("pages/signUp.py", label="Regístrate.")
