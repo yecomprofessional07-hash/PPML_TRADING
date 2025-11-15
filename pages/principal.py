@@ -6,11 +6,8 @@ from model.solicitudes import recibie
 #He importado el ML y colocado en las metricas
 decision, confianza, precio = recibie()
 
-
 #He agregado esta funcion con el objetivo de proporcionar
 # el csv users el cual contiene usersname y password
-
-
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading", layout="wide")
