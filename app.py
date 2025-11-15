@@ -42,7 +42,6 @@ with col2:
         # Lógica de autenticación
         if login_btn:
             if user and password:
-                st.success(f"¡Bienvenido!, {user}")
                 st.switch_page("pages/principal.py")
             else:
                 st.error("Por favor, ingrese usuario y contraseña.")
