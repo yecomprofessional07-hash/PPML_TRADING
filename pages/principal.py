@@ -1,11 +1,12 @@
 #================================= Importaciones/Librerías ================================#
-from model.solicitudes import recibir
 import streamlit as st
 import pandas as pd
 import random
 import yfinance as yf
 import altair as alt
-from model.solicitudes import recibir
+# Importa solo de B.
+from model.solicitudes import manejar_dato_para_a
+
 
 
 
@@ -132,7 +133,7 @@ empresas = {
 
 #=================================== Variables Globales ===================================#
 
-decision, confianza, precio = recibir()     # Valores dinámicos: se importa el ML y con una función se obtienen los valores de métricas
+
 userName = "user"                           # Valor dinámico: nombre de usuario
 budget = 0                                  # Valor dinámico: presupuesto del usuario
 moneyInStocks = 0                           # Valor dinámico: dinero invertido en acciones
@@ -206,6 +207,13 @@ with st.sidebar:
 st.markdown("## GESTOR DE TRADING BASADO EN MACHINE LEARNING")
 
 st.markdown("---")
+iniciar = ''
+
+if accion:
+    iniciar = accion
+elif busqueda in empresas.keys():
+    iniciar = empresas[busqueda]
+
 
 #Segunda fila: Histograma + botones de acción
 col1, col2 = st.columns([4, 1])
@@ -216,8 +224,8 @@ with col1:
         periodo = dicc_tiempo[time]
     else:
         periodo = '6mo'
-    if accion:
-        datos = yf.download(accion, period=periodo)
+    if not iniciar == '':
+        datos = yf.download(iniciar, period=periodo)
         datos = datos.reset_index().rename(columns={'Date': 'date'})
             
         # Gráfico OHLC simple
@@ -259,6 +267,20 @@ with col2:
 
 st.markdown("---")
 
+#================Funciones para metricas================#
+def iniciar_proceso():
+    if iniciar == '':
+        dato_inicial = 'AAPL'
+    else: 
+        dato_inicial = iniciar
+    # Llama a B para que maneje el proceso
+    dato_final = manejar_dato_para_a(dato_inicial)
+    
+    #print(f"A: Proceso completado. Resultado final: {dato_final}")
+    return dato_final
+decision, confianza, precio = iniciar_proceso()     # Valores dinámicos: se importa el ML y con una función se obtienen los valores de métricas
+
+
 #Tercera fila: Métricas
 col1, col2, col3 = st.columns(3)
 with col1:
@@ -272,6 +294,8 @@ with col3:
     st.metric(label="Precio actual", value=f"{precio:.2f}")
 
 #==============Funciones de envio=========#
+
+
 def buscador():
     if busqueda in empresas.keys():
         return busqueda

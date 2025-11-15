@@ -1,5 +1,6 @@
 import pandas as pd
-from .BuscarAcciones import ML_estados
+# Importa solo de C. Nunca importa de A.
+from .BuscarAcciones import procesar_dato
 #from pages.principal import buscador
 
 empresas = {
@@ -115,6 +116,15 @@ empresas = {
     "Comcast": "CMCSA",
     "Charter Communications": "CHTR"
 }
+# modulo_b.py
+
+
+
+def manejar_dato_para_a(dato):
+   
+    decision, confianza, precio = procesar_dato(dato)
+    #print(f"B: Recibido de C, devolviendo a A")
+    return decision, confianza, precio
 
 #def enviar(self):
     #selector= self
@@ -124,7 +134,4 @@ empresas = {
     #else:
         #return None
 
-def recibir():
-    decision, confianza, precio = ML_estados()
-    return decision, confianza, precio
 

@@ -7,67 +7,75 @@ from sklearn.preprocessing import StandardScaler
 #from .solicitudes import envio
 #from .solicitudes import enviar
 
-# 1. Descargar datos
-empresa = 'AAPL'#envio()
+# modulo_c.py
 
-datos = yf.download(empresa, period='2y')
+def procesar_dato(dato):
+    """Simula el procesamiento del dato."""
+    print(f"C: Procesando dato: {dato}")
+    dato_procesado = dato
 
-# 2. Calcular RSI
-def calcular_rsi(precios, window=14):
-    delta = precios.diff()
-    gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
-    loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
-    rs = gain / loss
-    return 100 - (100 / (1 + rs))
 
-# 3. Crear características
-datos['SMA_20'] = datos['Close'].rolling(20).mean()
-datos['RSI'] = calcular_rsi(datos['Close'])
-datos['Volatility'] = datos['Close'].rolling(20).std()
+    # 1. Descargar datos
+    empresa = dato_procesado
 
-# 4. Crear variable objetivo (Compra=2, Hold=1, Vender=0)
-datos['Future_Return'] = datos['Close'].shift(-5) / datos['Close'] - 1
-datos['Decision'] = datos['Future_Return'].apply(
-    lambda x: 2 if x > 0.02 else 0 if x < -0.01 else 1
-)
+    datos = yf.download(empresa, period='2y')
 
-# 5. Preparar datos para entrenamiento
-datos_limpios = datos.dropna()
-X = datos_limpios[['SMA_20', 'RSI', 'Volatility']]
-y = datos_limpios['Decision']
+    # 2. Calcular RSI
+    def calcular_rsi(precios, window=14):
+        delta = precios.diff()
+        gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()
+        loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()
+        rs = gain / loss
+        return 100 - (100 / (1 + rs))
 
-# 6. Entrenar modelo
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+    # 3. Crear características
+    datos['SMA_20'] = datos['Close'].rolling(20).mean()
+    datos['RSI'] = calcular_rsi(datos['Close'])
+    datos['Volatility'] = datos['Close'].rolling(20).std()
 
-modelo = LogisticRegression(random_state=42)
-modelo.fit(X_scaled, y)
+    # 4. Crear variable objetivo (Compra=2, Hold=1, Vender=0)
+    datos['Future_Return'] = datos['Close'].shift(-5) / datos['Close'] - 1
+    datos['Decision'] = datos['Future_Return'].apply(
+        lambda x: 2 if x > 0.02 else 0 if x < -0.01 else 1
+    )
 
-print("✅ Modelo entrenado!")
+    # 5. Preparar datos para entrenamiento
+    datos_limpios = datos.dropna()
+    X = datos_limpios[['SMA_20', 'RSI', 'Volatility']]
+    y = datos_limpios['Decision']
 
-# Obtener los datos MÁS RECIENTES para hacer predicción
-ultimos_datos = datos_limpios[['SMA_20', 'RSI', 'Volatility']].iloc[-1:]
+    # 6. Entrenar modelo
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
 
-# Escalar igual que en entrenamiento
-ultimos_datos_scaled = scaler.transform(ultimos_datos)
+    modelo = LogisticRegression(random_state=42)
+    modelo.fit(X_scaled, y)
 
-# Hacer predicción
-prediccion = modelo.predict(ultimos_datos_scaled)[0]
-probabilidades = modelo.predict_proba(ultimos_datos_scaled)[0]
+    print("✅ Modelo entrenado!")
 
-# "Preguntarle" al modelo
-decisiones = {0: 'VENDER', 1: 'MANTENER', 2: 'COMPRAR'}
-precio_actual = float(datos_limpios['Close'].iloc[-1])
-print(f"🎯 DECISIÓN DEL MODELO: {decisiones[prediccion]}")
-print(f"📊 CONFIANZA: {probabilidades[prediccion]:.2%}")
-print(f"💰 Precio actual: ${precio_actual:.2f}")
+    # Obtener los datos MÁS RECIENTES para hacer predicción
+    ultimos_datos = datos_limpios[['SMA_20', 'RSI', 'Volatility']].iloc[-1:]
 
-#Creando Variables derivadas de la prediccion
-decision = decisiones[prediccion]
-confianza = probabilidades[prediccion]
-precio = precio_actual
+    # Escalar igual que en entrenamiento
+    ultimos_datos_scaled = scaler.transform(ultimos_datos)
+
+    # Hacer predicción
+    prediccion = modelo.predict(ultimos_datos_scaled)[0]
+    probabilidades = modelo.predict_proba(ultimos_datos_scaled)[0]
+
+    # "Preguntarle" al modelo
+    decisiones = {0: 'VENDER', 1: 'MANTENER', 2: 'COMPRAR'}
+    precio_actual = float(datos_limpios['Close'].iloc[-1])
+    print(f"🎯 DECISIÓN DEL MODELO: {decisiones[prediccion]}")
+    print(f"📊 CONFIANZA: {probabilidades[prediccion]:.2%}")
+    print(f"💰 Precio actual: ${precio_actual:.2f}")
+
+    #Creando Variables derivadas de la prediccion
+    decision = decisiones[prediccion]
+    confianza = probabilidades[prediccion]
+    precio = precio_actual
+    return decision, confianza, precio
 
 #Comunicando estados 
 
-def ML_estados():
-    return decision, confianza, precio
+    
