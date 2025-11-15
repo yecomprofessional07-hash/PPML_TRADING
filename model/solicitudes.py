@@ -1,5 +1,7 @@
 import pandas as pd
 from .BuscarAcciones import ML_estados
+#from pages.principal import buscador
+
 empresas = {
     # 🔴 TECNOLOGÍA (25 empresas)
     "Apple": "AAPL",

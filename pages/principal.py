@@ -8,12 +8,126 @@ import altair as alt
 from model.solicitudes import recibir
 
 
-#diccionario para tiempos del histograma
+
+#====================###DICCIONARIOS###====================#
 
 dicc_tiempo ={
     '1 Mes':'1mo', '3 Meses':'3mo', '6 Meses':'6mo', 
     '1 Año':'1y', '5 Años':'5y', '10 Años':'10y', 
     '20 Años':'20y'
+}
+empresas = {
+    # 🔴 TECNOLOGÍA (25 empresas)
+    "Apple": "AAPL",
+    "Microsoft": "MSFT",
+    "Alphabet (Google)": "GOOGL",
+    "Amazon": "AMZN",
+    "Nvidia": "NVDA",
+    "Meta Platforms (Facebook)": "META",
+    "Tesla": "TSLA",
+    "Broadcom": "AVGO",
+    "Adobe": "ADBE",
+    "Salesforce": "CRM",
+    "Oracle": "ORCL",
+    "Cisco": "CSCO",
+    "Intel": "INTC",
+    "IBM": "IBM",
+    "Qualcomm": "QCOM",
+    "AMD": "AMD",
+    "Netflix": "NFLX",
+    "PayPal": "PYPL",
+    "Intuit": "INTU",
+    "ServiceNow": "NOW",
+    "Applied Materials": "AMAT",
+    "Texas Instruments": "TXN",
+    "Micron Technology": "MU",
+    "Snowflake": "SNOW",
+    "Shopify": "SHOP",
+    
+    # 🏦 FINANZAS (20 empresas)
+    "JPMorgan Chase": "JPM",
+    "Bank of America": "BAC",
+    "Wells Fargo": "WFC",
+    "Citigroup": "C",
+    "Goldman Sachs": "GS",
+    "Morgan Stanley": "MS",
+    "BlackRock": "BLK",
+    "Visa": "V",
+    "Mastercard": "MA",
+    "American Express": "AXP",
+    "S&P Global": "SPGI",
+    "Moody's": "MCO",
+    "Blackstone": "BX",
+    "Charles Schwab": "SCHW",
+    "PNC Financial": "PNC",
+    "Truist Financial": "TFC",
+    "US Bancorp": "USB",
+    "Capital One": "COF",
+    "Aon": "AON",
+    "Marsh & McLennan": "MMC",
+    
+    # 🏥 SALUD (15 empresas)
+    "Johnson & Johnson": "JNJ",
+    "UnitedHealth": "UNH",
+    "Pfizer": "PFE",
+    "Merck": "MRK",
+    "AbbVie": "ABBV",
+    "Eli Lilly": "LLY",
+    "Thermo Fisher Scientific": "TMO",
+    "Abbott Laboratories": "ABT",
+    "Danaher": "DHR",
+    "Amgen": "AMGN",
+    "Bristol-Myers Squibb": "BMY",
+    "Gilead Sciences": "GILD",
+    "Moderna": "MRNA",
+    "Regeneron": "REGN",
+    "Biogen": "BIIB",
+    
+    # 🛒 CONSUMO (20 empresas)
+    "Procter & Gamble": "PG",
+    "Walmart": "WMT",
+    "Coca-Cola": "KO",
+    "PepsiCo": "PEP",
+    "McDonald's": "MCD",
+    "Nike": "NKE",
+    "Home Depot": "HD",
+    "Lowe's": "LOW",
+    "Starbucks": "SBUX",
+    "Costco": "COST",
+    "Target": "TGT",
+    "Disney": "DIS",
+    "Netflix": "NFLX",
+    "Booking Holdings": "BKNG",
+    "Estée Lauder": "EL",
+    "Colgate-Palmolive": "CL",
+    "Mondelez": "MDLZ",
+    "Kraft Heinz": "KHC",
+    "General Mills": "GIS",
+    "Hershey": "HSY",
+    
+    # ⚡ ENERGÍA/INDUSTRIALES (10 empresas)
+    "Exxon Mobil": "XOM",
+    "Chevron": "CVX",
+    "ConocoPhillips": "COP",
+    "NextEra Energy": "NEE",
+    "Southern Company": "SO",
+    "Boeing": "BA",
+    "Caterpillar": "CAT",
+    "3M": "MMM",
+    "Honeywell": "HON",
+    "Union Pacific": "UNP",
+    
+    # 🏠 BIENES RAÍCES/UTILIDADES (10 empresas)
+    "American Tower": "AMT",
+    "Crown Castle": "CCI",
+    "Prologis": "PLD",
+    "Equinix": "EQIX",
+    "Digital Realty": "DLR",
+    "Verizon": "VZ",
+    "AT&T": "T",
+    "T-Mobile": "TMUS",
+    "Comcast": "CMCSA",
+    "Charter Communications": "CHTR"
 }
 
 #=================================== Variables Globales ===================================#
@@ -62,9 +176,11 @@ with st.sidebar:
         st.button("←", key="logout", help="Cerrar sesión")
     
     st.markdown("---")
-    
+    busqueda = st.text_input("Buscar por nombre:", placeholder="Escribe un nombre...",key="Busqueda")
+    if not busqueda in empresas.keys():
+        st.markdown("Acción no Registrada")
     # Acción/es en uso
-    accion = st.multiselect("Acciones en uso", ['AAPL','GOOG','AMZN','TSLA','META'], default=['AAPL'])
+    accion = st.multiselect("Acciones en uso", ['AAPL','GOOG','AMZN','TSLA','META'], default='AAPL')
 
     # Horizonte de tiempo
     time = st.pills("Horizonte de tiempo", ['1 Mes', '3 Meses', '6 Meses', '1 Año', '5 Años', '10 Años', '20 Años'], default="6 Meses",)
@@ -95,33 +211,37 @@ st.markdown("---")
 col1, col2 = st.columns([4, 1])
 with col1:
     # Histograma
+    
     if time in dicc_tiempo.keys():
         periodo = dicc_tiempo[time]
     else:
         periodo = '6mo'
-
-    datos = yf.download(accion, period=periodo)
-    datos = datos.reset_index().rename(columns={'Date': 'date'})
+    if accion:
+        datos = yf.download(accion, period=periodo)
+        datos = datos.reset_index().rename(columns={'Date': 'date'})
+            
+        # Gráfico OHLC simple
+        chart = alt.Chart(datos).mark_rule().encode(
+            x='date:T',
+            y='Low:Q',
+            y2='High:Q',
+            color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
+        ) + alt.Chart(datos).mark_bar().encode(
+            x='date:T',
+            y='Open:Q',
+            y2='Close:Q',
+            color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
+        ).properties(
+            title=f'Gráfico OHLC - ({time} )',
+            width=600, 
+            height=400
+        )
         
-    # Gráfico OHLC simple
-    chart = alt.Chart(datos).mark_rule().encode(
-        x='date:T',
-        y='Low:Q',
-        y2='High:Q',
-        color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
-    ) + alt.Chart(datos).mark_bar().encode(
-        x='date:T',
-        y='Open:Q',
-        y2='Close:Q',
-        color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
-    ).properties(
-        title=f'Gráfico OHLC - ({time} )',
-        width=600, 
-        height=400
-    )
-
+        st.altair_chart(chart, use_container_width=True)
+    else:
+        st.write("### No tienes acciones en uso")
     # Mostrar en Streamlit
-    st.altair_chart(chart, use_container_width=True)
+    
 
     # También mostrar los datos en tabla
     #st.write("### Datos OHLC")
@@ -150,3 +270,8 @@ with col2:
 with col3:
     # Métrica 3
     st.metric(label="Precio actual", value=f"{precio:.2f}")
+
+#==============Funciones de envio=========#
+def buscador():
+    if busqueda in empresas.keys():
+        return busqueda

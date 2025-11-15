@@ -4,10 +4,11 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
+#from .solicitudes import envio
 #from .solicitudes import enviar
 
 # 1. Descargar datos
-empresa = 'VZ'
+empresa = 'AAPL'#envio()
 
 datos = yf.download(empresa, period='2y')
 
@@ -45,7 +46,7 @@ modelo.fit(X_scaled, y)
 print("✅ Modelo entrenado!")
 
 # Obtener los datos MÁS RECIENTES para hacer predicción
-ultimos_datos = datos_limpios[['SMA_20', 'RSI', 'Volatility']].iloc[-5:]
+ultimos_datos = datos_limpios[['SMA_20', 'RSI', 'Volatility']].iloc[-1:]
 
 # Escalar igual que en entrenamiento
 ultimos_datos_scaled = scaler.transform(ultimos_datos)

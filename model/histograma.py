@@ -3,30 +3,21 @@ import pandas as pd
 import altair as alt
 import streamlit as st
 
-# Obtener datos rápidos
-datos = yf.download("AAPL", period="3y")
-datos = datos.reset_index().rename(columns={'Date': 'date'})
+data = pd.DataFrame({
+    'nombre': ['Ana Gómez', 'Carlos López', 'María Rodríguez', 'Pedro Sánchez'],
+    'edad': [25, 32, 28, 45],
+    'ciudad': ['Madrid', 'Barcelona', 'Valencia', 'Sevilla'],
+    'salario': [30000, 45000, 35000, 50000]
+})
 
-# Gráfico OHLC simple
-chart = alt.Chart(datos).mark_rule().encode(
-    x='date:T',
-    y='Low:Q',
-    y2='High:Q',
-    color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
-) + alt.Chart(datos).mark_bar().encode(
-    x='date:T',
-    y='Open:Q',
-    y2='Close:Q',
-    color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
-).properties(
-    title='Gráfico OHLC - AAPL (1 mes)',
-    width=600, 
-    height=400
-)
+# Búsqueda simple
+st.title("🔍 Búsqueda Básica")
 
-# Mostrar en Streamlit
-st.altair_chart(chart, use_container_width=True)
+busqueda = st.text_input("Buscar por nombre:", placeholder="Escribe un nombre...")
 
-# También mostrar los datos en tabla
-st.write("### Datos OHLC")
-st.dataframe(datos)
+if busqueda:
+    resultados = data[data['nombre'].str.contains(busqueda, case=False, na=False)]
+    st.write(f"**Resultados para '{busqueda}':**")
+    st.dataframe(resultados)
+else:
+    st.dataframe(data)
