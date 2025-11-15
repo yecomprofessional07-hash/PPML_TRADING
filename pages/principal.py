@@ -7,14 +7,15 @@ import altair as alt
 # Importa solo de B.
 from model.solicitudes import manejar_dato_para_a
 
-
-
-
-#====================###DICCIONARIOS###====================#
+#=================================== Variables Globales ===================================#
 
 dicc_tiempo ={
-    '1 Mes':'1mo', '3 Meses':'3mo', '6 Meses':'6mo', 
-    '1 Año':'1y', '5 Años':'5y', '10 Años':'10y', 
+    '1 Mes':'1mo', 
+    '3 Meses':'3mo', 
+    '6 Meses':'6mo', 
+    '1 Año':'1y', 
+    '5 Años':'5y', 
+    '10 Años':'10y', 
     '20 Años':'20y'
 }
 empresas = {
@@ -131,9 +132,6 @@ empresas = {
     "Charter Communications": "CHTR"
 }
 
-#=================================== Variables Globales ===================================#
-
-
 userName = "user"                           # Valor dinámico: nombre de usuario
 budget = 0                                  # Valor dinámico: presupuesto del usuario
 moneyInStocks = 0                           # Valor dinámico: dinero invertido en acciones
@@ -171,17 +169,12 @@ with st.sidebar:
         with colSub2:
             st.markdown(f"#### **{userName}**")
     with col2:
-        def logout():
-            st.switch_page("app.py")
-            
-        st.button("←", key="logout", help="Cerrar sesión")
+        st.page_link("app.py", label="←")
     
     st.markdown("---")
-    busqueda = st.text_input("Buscar por nombre:", placeholder="Escribe un nombre...",key="Busqueda")
-    if not busqueda in empresas.keys():
-        st.markdown("Acción no Registrada")
+
     # Acción/es en uso
-    accion = st.multiselect("Acciones en uso", ['AAPL','GOOG','AMZN','TSLA','META'], default='AAPL')
+    action = st.selectbox(label = "Acciones en uso", options = empresas.keys(), index = 0)
 
     # Horizonte de tiempo
     time = st.pills("Horizonte de tiempo", ['1 Mes', '3 Meses', '6 Meses', '1 Año', '5 Años', '10 Años', '20 Años'], default="6 Meses",)
@@ -207,25 +200,13 @@ with st.sidebar:
 st.markdown("## GESTOR DE TRADING BASADO EN MACHINE LEARNING")
 
 st.markdown("---")
-iniciar = ''
-
-if accion:
-    iniciar = accion
-elif busqueda in empresas.keys():
-    iniciar = empresas[busqueda]
-
 
 #Segunda fila: Histograma + botones de acción
 col1, col2 = st.columns([4, 1])
 with col1:
     # Histograma
-    
-    if time in dicc_tiempo.keys():
-        periodo = dicc_tiempo[time]
-    else:
-        periodo = '6mo'
-    if not iniciar == '':
-        datos = yf.download(iniciar, period=periodo)
+    if not action == '':
+        datos = yf.download(empresas[action], period=dicc_tiempo[time])
         datos = datos.reset_index().rename(columns={'Date': 'date'})
             
         # Gráfico OHLC simple
@@ -240,21 +221,13 @@ with col1:
             y2='Close:Q',
             color=alt.condition("datum.Open <= datum.Close", alt.value("green"), alt.value("red"))
         ).properties(
-            title=f'Gráfico OHLC - ({time} )',
+            title=f'Gráfico OHLC - ({time})',
             width=600, 
             height=400
         )
-        
         st.altair_chart(chart, use_container_width=True)
     else:
         st.write("### No tienes acciones en uso")
-    # Mostrar en Streamlit
-    
-
-    # También mostrar los datos en tabla
-    #st.write("### Datos OHLC")
-    #st.dataframe(datos)
-    st.line_chart(df, use_container_width=True)
 with col2:
     #Botones de acción
     st.markdown("#### Botones de Acción")
@@ -269,15 +242,16 @@ st.markdown("---")
 
 #================Funciones para metricas================#
 def iniciar_proceso():
-    if iniciar == '':
+    if empresas[action] == '':
         dato_inicial = 'AAPL'
     else: 
-        dato_inicial = iniciar
+        dato_inicial = empresas[action]
     # Llama a B para que maneje el proceso
     dato_final = manejar_dato_para_a(dato_inicial)
     
     #print(f"A: Proceso completado. Resultado final: {dato_final}")
     return dato_final
+
 decision, confianza, precio = iniciar_proceso()     # Valores dinámicos: se importa el ML y con una función se obtienen los valores de métricas
 
 
