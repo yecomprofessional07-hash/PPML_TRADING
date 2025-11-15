@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from backend.acciones.solicitudes import recibie
+from model.solicitudes import recibie
 
 
 #He importado el ML y colocado en las metricas
