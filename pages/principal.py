@@ -155,7 +155,7 @@ st.session_state["identidad"] = identidad
 contador = 0
 estado = 1          #variable de estado para settings
 st.session_state["estado"] = estado
-
+d_accion = 0
 #=============================== Funciones para los botones =============?=================#
 # Función para la ventana emergente
 def popUp():
@@ -193,11 +193,14 @@ with st.sidebar:
 
     # Presupuesto
     st.markdown("#### Presupuesto")
+    
     st.markdown(f"L. {budget:,.2f}")
     
     # Dinero en acciones
     st.markdown("#### Dinero en Acciones")
-    st.markdown(f"L. {moneyInStocks:,.2f}")
+    if action:
+        d_accion = df.loc[df['user'] == userName, f'{action}'].iloc[0]
+        st.markdown(f"L. {d_accion:,.2f}")
     
     st.markdown("---")
     
@@ -215,11 +218,14 @@ st.markdown("## GESTOR DE TRADING BASADO EN MACHINE LEARNING")
 def buyActions(compra):
     monto_actual = df.loc[df['user'] == userName, 'monto'].iloc[0]
     accion_actual = df.loc[df['user'] == userName, 'acciones'].iloc[0]
+    diversificado = df.loc[df['user'] == userName, f'{action}'].iloc[0]
     if monto_actual >= compra:
         nuevo_monto = monto_actual - compra
         nueva_accion = accion_actual + compra
+        nuevo_diver = diversificado + compra
         df.loc[df['user'] == userName, 'monto'] = nuevo_monto
         df.loc[df['user'] == userName, 'acciones'] = nueva_accion
+        df.loc[df["user"]== userName, f'{action}'] = nuevo_diver
 
         df.to_csv('data/users.csv', index=False)
         st.toast("Has comprado acciones con éxito.")
@@ -233,17 +239,20 @@ def buyActions(compra):
 def sellActions(acciones):
     monto_actual = df.loc[df['user'] == userName, 'monto'].iloc[0]
     accion_actual = df.loc[df['user'] == userName, 'acciones'].iloc[0]
-    if accion_actual >= compra:
-        nuevo_monto = monto_actual + compra
-        nueva_accion = accion_actual - compra
+    diversificado = df.loc[df['user'] == userName, f'{action}'].iloc[0] 
+    if diversificado >= acciones:
+        nuevo_monto = monto_actual + acciones
+        nueva_accion = accion_actual - acciones
+        nuevo_diver = diversificado - acciones
         df.loc[df['user'] == userName, 'monto'] = nuevo_monto
         df.loc[df['user'] == userName, 'acciones'] = nueva_accion
+        df.loc[df["user"]== userName, f'{action}'] = nuevo_diver
 
         df.to_csv('data/users.csv', index=False)
         st.toast("Has vendido acciones con éxito.")
         st.rerun()
     else:
-        st.error("Presupuesto insuficiente")
+        st.error("Valor inferior al mercado")
     
 
 # Función para el botón de mantener
