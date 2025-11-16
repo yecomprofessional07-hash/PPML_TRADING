@@ -7,6 +7,7 @@ import altair as alt
 # Importa solo de B.
 from model.solicitudes import manejar_dato_para_a
 
+
 #=================================== Variables Globales ===================================#
 
 dicc_tiempo ={
@@ -132,28 +133,37 @@ empresas = {
     "Charter Communications": "CHTR"
 }
 
-userName = "user"                           # Valor dinámico: nombre de usuario
-budget = 0                                  # Valor dinámico: presupuesto del usuario
-moneyInStocks = 0                           # Valor dinámico: dinero invertido en acciones
-image = 1                                   # Valor dinámico: imagen de perfil del usuario
-df = pd.DataFrame()                         # Valor dinámico: DataFrame para almacenar los datos del histograma
+df = pd.read_csv("data/users.csv")
+
+if 'nuevo_usuario' in st.session_state and 'monto_inicial' in st.session_state:
+    userName = st.session_state['nuevo_usuario']
+    monto = st.session_state['monto_inicial']
+    moneyInStocks = float(monto)
+    if 'image' in df.columns:
+        fila_usuario = df[df['user'] == userName]
+        image = fila_usuario.iloc[0]['image']
+
+elif 'usuario_registrado' in st.session_state:
+    userName = st.session_state['usuario_registrado']
+    fila_usuario = df[df['user'] == userName]
+    
+    if 'monto' in df.columns and 'image' in df.columns:
+        monto = fila_usuario.iloc[0]['monto']
+        image = fila_usuario.iloc[0]['image']
+        moneyInStocks = float(monto)
+
+#moneyInStocks = float(monto)
+#userName = "user"                           # Valor dinámico: nombre de usuario
+budget = 0 
+#image = 1                                 # Valor dinámico: presupuesto del usuario
+contador = 0
 
 #=============================== Funciones para los botones =============?=================#
 # Función para la ventana emergente
 def popUp():
     pass
 
-# Función para el botón de comprar
-def buyActions():
-    st.toast("Has comprado acciones con éxito.")
 
-# Función para el botón de vender
-def sellActions():
-    st.toast("Haz vendido tus acciones con éxito.")
-
-# Función para el botón de mantener
-def standBy(): 
-    st.toast("Has decidido mantener tus acciones.")
 
 #=============================== Configuración de la página ===============================#
 st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="wide")
@@ -189,7 +199,7 @@ with st.sidebar:
     
     # Dinero en acciones
     st.markdown("#### Dinero en Acciones")
-    st.markdown(f"L. {moneyInStocks:,}")
+    st.markdown(f"L. {moneyInStocks:,.2f}")
     
     st.markdown("---")
     
@@ -203,6 +213,25 @@ with st.sidebar:
 #Primera fila: Título
 st.markdown("## GESTOR DE TRADING BASADO EN MACHINE LEARNING")
 
+# Función para el botón de comprar
+def buyActions(compra):
+    monto_actual = df.loc[df['user'] == userName, 'monto'].iloc[0]
+    nuevo_monto = monto_actual - compra
+    df.loc[df['user'] == userName, 'monto'] = nuevo_monto
+
+    df.to_csv('data/users.csv', index=False)
+    st.toast("Has comprado acciones con éxito.")
+    
+
+# Función para el botón de vender
+def sellActions():
+    st.toast("Haz vendido tus acciones con éxito.")
+
+# Función para el botón de mantener
+def standBy(): 
+    st.toast("Has decidido mantener tus acciones.")
+
+
 st.markdown("---")
 
 #Segunda fila: Histograma + botones de acción
@@ -212,7 +241,7 @@ with col1:
     if not action == '':
         datos = yf.download(empresas[action], period=dicc_tiempo[time])
         datos = datos.reset_index().rename(columns={'Date': 'date'})
-            
+        compra = float(datos['Close'].iloc[-1])
         # Gráfico OHLC simple
         chart = alt.Chart(datos).mark_rule().encode(
             x='date:T',
@@ -232,11 +261,16 @@ with col1:
         st.altair_chart(chart, use_container_width=True)
     else:
         st.write("### No tienes acciones en uso")
+
+#=================Acciones de compra venta==============#
 with col2:
+
     #Botones de acción
     st.markdown("#### Botones de Acción")
     if st.button("Comprar", use_container_width=True):
-        buyActions()
+        contador = contador +1
+        precio = compra * contador
+        buyActions(precio)
     if st.button("Vender", use_container_width=True):
         sellActions()
     if st.button("Mantener", use_container_width=True):

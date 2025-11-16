@@ -5,6 +5,9 @@ import pandas as pd
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
 
+#=======Diccionarios=====#
+
+
 col1, col2, col3 = st.columns([4, 10, 4])
 with col2:
     with st.container(border = True):
@@ -45,6 +48,23 @@ with col2:
                 try:
                     # Intenta convertir el monto a un número (float)
                     monto_numerico = float(monto)
+                    st.session_state['nuevo_usuario'] = user
+                    st.session_state['monto_inicial'] = monto_numerico
+
+                    # Crear lista
+                    lista_usuario = [user, password,monto]
+        
+        # Agregar al CSV
+                    df = pd.read_csv('data/users.csv')
+                    nueva_fila = {'user': lista_usuario[0], 'password': lista_usuario[1], 'monto':lista_usuario[2]}
+                    
+                    for col in df.columns[3:]:
+                        nueva_fila[col] = 0
+                    
+                    df = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)
+                    df.to_csv('data/users.csv', index=False)
+                    
+                    st.success(f"✅ Usuario {lista_usuario[0]} creado exitosamente!")
                     # Si la conversión es exitosa:
                     st.switch_page("pages/principal.py") 
                 except ValueError:
