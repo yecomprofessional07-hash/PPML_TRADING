@@ -56,8 +56,9 @@ with col2:
                     #agregando dataframe
 
                     df = pd.read_csv('data/users.csv')
-                    ident = len(df)
+                    ident = len(df)+1
                     # Crear lista
+
                     lista_usuario = [user, password, monto, image,ident]
         
     
@@ -69,7 +70,7 @@ with col2:
                     
                     df = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)
                     df.to_csv('data/users.csv', index=False)
-                    
+                    st.session_state['identidad'] = ident
                     st.success(f"✅ Usuario {lista_usuario[0]} creado exitosamente!")
                     # Si la conversión es exitosa:
                     st.switch_page("pages/principal.py") 

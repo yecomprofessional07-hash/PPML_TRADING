@@ -135,22 +135,12 @@ empresas = {
 
 df = pd.read_csv("data/users.csv")
 
-if 'nuevo_usuario' in st.session_state and 'monto_inicial' in st.session_state:
-    userName = st.session_state['nuevo_usuario']
-    monto = st.session_state['monto_inicial']
-    budget = float(monto)
-    if 'image' in df.columns:
-        fila_usuario = df[df['user'] == userName]
-        acciones = fila_usuario.iloc[0]['acciones']
-        identidad = fila_usuario.iloc[0]['identidad']
-        moneyInStocks = float(acciones)
-        image = fila_usuario.iloc[0]['image']
-
-elif 'usuario_registrado' in st.session_state:
-    userName = st.session_state['usuario_registrado']
-    fila_usuario = df[df['user'] == userName]
+if 'identidad' in st.session_state:
+    id = st.session_state['identidad']
+    fila_usuario = df[df['identidad'] == id]
     
     if 'monto' in df.columns and 'image' in df.columns:
+        userName = fila_usuario.iloc[0]['user']
         monto = fila_usuario.iloc[0]['monto']
         identidad = fila_usuario.iloc[0]['identidad']
         acciones = fila_usuario.iloc[0]['acciones']

@@ -43,8 +43,10 @@ with col2:
         if login_btn:
             if user in df['user'].values:
                 fila_usuario = df[df['user'] == user]
+                ident = fila_usuario[0]['identidad']
                 if not fila_usuario.empty and fila_usuario.iloc[0]['password'] == password:
                     st.session_state['usuario_registrado'] = user
+                    st.session_state['identidad'] = ident
                     st.switch_page("pages/principal.py")
                     
                 else:
