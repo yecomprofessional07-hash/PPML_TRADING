@@ -4,7 +4,7 @@ import pandas as pd
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
-
+df = pd.read_csv("data/users.csv")
 # CSS para ocultar la barra de desplazamiento horizontal
 st.markdown("""
     <style>
@@ -41,8 +41,14 @@ with col2:
 
         # Lógica de autenticación
         if login_btn:
-            if user and password:
-                st.switch_page("pages/principal.py")
+            if user in df['user'].values:
+                fila_usuario = df[df['user'] == user]
+                if not fila_usuario.empty and fila_usuario.iloc[0]['password'] == password:
+                    st.session_state['usuario_registrado'] = user
+                    st.switch_page("pages/principal.py")
+                    
+                else:
+                    st.error("Credenciales no válidas")
             else:
                 st.toast("Por favor, ingrese usuario y contraseña.")
 

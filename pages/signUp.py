@@ -1,12 +1,13 @@
 # Librerías
 import streamlit as st
 import pandas as pd
+import random
 
 # Configuración de la página
 st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
 
 #=======Diccionarios=====#
-
+image = random.randint(1, 3)
 
 col1, col2, col3 = st.columns([4, 10, 4])
 with col2:
@@ -50,15 +51,16 @@ with col2:
                     monto_numerico = float(monto)
                     st.session_state['nuevo_usuario'] = user
                     st.session_state['monto_inicial'] = monto_numerico
-
+                    
                     # Crear lista
-                    lista_usuario = [user, password,monto]
+                    lista_usuario = [user, password, monto, image]
         
         # Agregar al CSV
                     df = pd.read_csv('data/users.csv')
-                    nueva_fila = {'user': lista_usuario[0], 'password': lista_usuario[1], 'monto':lista_usuario[2]}
+                    nueva_fila = {'user': lista_usuario[0], 'password': lista_usuario[1], 
+                                  'monto':lista_usuario[2], 'image':lista_usuario[3]}
                     
-                    for col in df.columns[3:]:
+                    for col in df.columns[4:]:
                         nueva_fila[col] = 0
                     
                     df = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)
