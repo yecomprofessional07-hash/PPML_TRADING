@@ -138,9 +138,11 @@ df = pd.read_csv("data/users.csv")
 if 'nuevo_usuario' in st.session_state and 'monto_inicial' in st.session_state:
     userName = st.session_state['nuevo_usuario']
     monto = st.session_state['monto_inicial']
-    moneyInStocks = float(monto)
+    budget = float(monto)
     if 'image' in df.columns:
         fila_usuario = df[df['user'] == userName]
+        acciones = fila_usuario.iloc[0]['acciones']
+        moneyInStocks = float(acciones)
         image = fila_usuario.iloc[0]['image']
 
 elif 'usuario_registrado' in st.session_state:
@@ -149,12 +151,14 @@ elif 'usuario_registrado' in st.session_state:
     
     if 'monto' in df.columns and 'image' in df.columns:
         monto = fila_usuario.iloc[0]['monto']
+        acciones = fila_usuario.iloc[0]['acciones']
         image = fila_usuario.iloc[0]['image']
-        moneyInStocks = float(monto)
+        moneyInStocks = float(acciones)
+        budget = float(monto)
 
 #moneyInStocks = float(monto)
 #userName = "user"                           # Valor dinámico: nombre de usuario
-budget = 0 
+#budget = 0 
 #image = 1                                 # Valor dinámico: presupuesto del usuario
 contador = 0
 
@@ -195,7 +199,7 @@ with st.sidebar:
 
     # Presupuesto
     st.markdown("#### Presupuesto")
-    st.markdown(f"L. {budget:,}")
+    st.markdown(f"L. {budget:,.2f}")
     
     # Dinero en acciones
     st.markdown("#### Dinero en Acciones")
@@ -216,16 +220,37 @@ st.markdown("## GESTOR DE TRADING BASADO EN MACHINE LEARNING")
 # Función para el botón de comprar
 def buyActions(compra):
     monto_actual = df.loc[df['user'] == userName, 'monto'].iloc[0]
-    nuevo_monto = monto_actual - compra
-    df.loc[df['user'] == userName, 'monto'] = nuevo_monto
+    accion_actual = df.loc[df['user'] == userName, 'acciones'].iloc[0]
+    if monto_actual >= compra:
+        nuevo_monto = monto_actual - compra
+        nueva_accion = accion_actual + compra
+        df.loc[df['user'] == userName, 'monto'] = nuevo_monto
+        df.loc[df['user'] == userName, 'acciones'] = nueva_accion
 
-    df.to_csv('data/users.csv', index=False)
-    st.toast("Has comprado acciones con éxito.")
+        df.to_csv('data/users.csv', index=False)
+        st.toast("Has comprado acciones con éxito.")
+        st.rerun()
+    else:
+        st.error("Presupuesto insuficiente")
     
 
+
 # Función para el botón de vender
-def sellActions():
-    st.toast("Haz vendido tus acciones con éxito.")
+def sellActions(acciones):
+    monto_actual = df.loc[df['user'] == userName, 'monto'].iloc[0]
+    accion_actual = df.loc[df['user'] == userName, 'acciones'].iloc[0]
+    if accion_actual >= compra:
+        nuevo_monto = monto_actual + compra
+        nueva_accion = accion_actual - compra
+        df.loc[df['user'] == userName, 'monto'] = nuevo_monto
+        df.loc[df['user'] == userName, 'acciones'] = nueva_accion
+
+        df.to_csv('data/users.csv', index=False)
+        st.toast("Has vendido acciones con éxito.")
+        st.rerun()
+    else:
+        st.error("Presupuesto insuficiente")
+    
 
 # Función para el botón de mantener
 def standBy(): 
@@ -271,8 +296,12 @@ with col2:
         contador = contador +1
         precio = compra * contador
         buyActions(precio)
+        
     if st.button("Vender", use_container_width=True):
-        sellActions()
+        contador = contador +1
+        precio = compra * contador
+        sellActions(precio)
+        
     if st.button("Mantener", use_container_width=True):
         standBy()
 
