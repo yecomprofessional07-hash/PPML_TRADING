@@ -120,9 +120,9 @@ empresas = {
 
 
 
-def manejar_dato_para_a(dato):
+def manejar_dato_para_a(dato,tiempo):
    
-    decision, confianza, precio = procesar_dato(dato)
+    decision, confianza, precio = procesar_dato(dato, tiempo)
     #print(f"B: Recibido de C, devolviendo a A")
     return decision, confianza, precio
 

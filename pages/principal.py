@@ -253,11 +253,22 @@ def sellActions(acciones):
         st.rerun()
     else:
         st.error("Valor inferior al mercado")
+        
+#================Funciones para metricas================#
+def iniciar_proceso():
+    if empresas[action] == '':
+        dato_inicial = 'AAPL'
+        period = '2y'
+    else: 
+        dato_inicial = empresas[action]
+        period = dicc_tiempo[time]
+    # Llama a B para que maneje el proceso
+    dato_final = manejar_dato_para_a(dato_inicial,period)
+    st.toast("El modelo se a inicializado")
     
+    #print(f"A: Proceso completado. Resultado final: {dato_final}")
+    return dato_final
 
-# Función para el botón de mantener
-def standBy(): 
-    st.toast("Has decidido mantener tus acciones.")
 
 
 st.markdown("---")
@@ -305,24 +316,13 @@ with col2:
         precio = compra * contador
         sellActions(precio)
         
-    if st.button("Mantener", use_container_width=True):
-        standBy()
+    if st.button("Sugerencia del ML", use_container_width=True):
+        decision, confianza, precio = iniciar_proceso()     # Valores dinámicos: se importa el ML y con una función se obtienen los valores de métricas
+    else:
+        decision, confianza, precio = "---", "---", "---" 
 
 st.markdown("---")
 
-#================Funciones para metricas================#
-def iniciar_proceso():
-    if empresas[action] == '':
-        dato_inicial = 'AAPL'
-    else: 
-        dato_inicial = empresas[action]
-    # Llama a B para que maneje el proceso
-    dato_final = manejar_dato_para_a(dato_inicial)
-    
-    #print(f"A: Proceso completado. Resultado final: {dato_final}")
-    return dato_final
-
-decision, confianza, precio = iniciar_proceso()     # Valores dinámicos: se importa el ML y con una función se obtienen los valores de métricas
 
 
 #Tercera fila: Métricas
@@ -332,9 +332,15 @@ with col1:
     st.metric(label="DECISIÓN DEL MODELO", value=f"{decision}")
 with col2:
     # Métrica 2
-    st.metric(label="CONFIANZA", value=f"{confianza:.2%}")
+    if confianza == "---":
+        st.metric(label="CONFIANZA", value=f"{confianza}")
+    else:
+        st.metric(label="CONFIANZA", value=f"{confianza:.2%}")
 with col3:
     # Métrica 3
-    st.metric(label="Precio actual", value=f"{precio:.2f}")
+    if confianza == "---":
+        st.metric(label="Precio actual", value=f"{precio}")
+    else:
+        st.metric(label="Precio actual", value=f"{precio:.2f}")
 
 #==============Funciones de envio=========#

@@ -9,16 +9,16 @@ from sklearn.preprocessing import StandardScaler
 
 # modulo_c.py
 
-def procesar_dato(dato):
+def procesar_dato(dato, tiempo):
     """Simula el procesamiento del dato."""
     print(f"C: Procesando dato: {dato}")
     dato_procesado = dato
-
+    periodo = tiempo
 
     # 1. Descargar datos
     empresa = dato_procesado
 
-    datos = yf.download(empresa, period='2y')
+    datos = yf.download(empresa, period= periodo)
 
     # 2. Calcular RSI
     def calcular_rsi(precios, window=14):
