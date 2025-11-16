@@ -48,32 +48,36 @@ with col2:
             else:
                 # 2. Validación de que el MONTO es numérico
                 try:
-                    # Intenta convertir el monto a un número (float)
-                    monto_numerico = float(monto)
-                    st.session_state['nuevo_usuario'] = user
-                    st.session_state['monto_inicial'] = monto_numerico
-                    
-                    #agregando dataframe
-
                     df = pd.read_csv('data/users.csv')
-                    ident = len(df)+1
-                    # Crear lista
+                    if not password in df['password'].values:
+                        # Intenta convertir el monto a un número (float)
+                        monto_numerico = float(monto)
+                        st.session_state['nuevo_usuario'] = user
+                        st.session_state['monto_inicial'] = monto_numerico
+                        
+                        #agregando dataframe
 
-                    lista_usuario = [user, password, monto, image,ident]
+                        
+                        ident = len(df)+1
+                        # Crear lista
+
+                        lista_usuario = [user, password, monto, image,ident]
+            
         
-    
-                    nueva_fila = {'user': lista_usuario[0], 'password': lista_usuario[1], 
-                                  'monto':lista_usuario[2], 'image':lista_usuario[3],'identidad':lista_usuario[4]}
-                    
-                    for col in df.columns[5:]:
-                        nueva_fila[col] = 0
-                    
-                    df = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)
-                    df.to_csv('data/users.csv', index=False)
-                    st.session_state['identidad'] = ident
-                    st.success(f"✅ Usuario {lista_usuario[0]} creado exitosamente!")
-                    # Si la conversión es exitosa:
-                    st.switch_page("pages/principal.py") 
+                        nueva_fila = {'user': lista_usuario[0], 'password': lista_usuario[1], 
+                                    'monto':lista_usuario[2], 'image':lista_usuario[3],'identidad':lista_usuario[4]}
+                        
+                        for col in df.columns[5:]:
+                            nueva_fila[col] = 0
+                        
+                        df = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)
+                        df.to_csv('data/users.csv', index=False)
+                        st.session_state['identidad'] = ident
+                        st.success(f"✅ Usuario {lista_usuario[0]} creado exitosamente!")
+                        # Si la conversión es exitosa:
+                        st.switch_page("pages/principal.py")
+                    else:
+                        st.error("ingrese una contraseña más segura") 
                 except ValueError:
                     # Si falla la conversión (significa que hay letras o símbolos no numéricos)
                     st.toast("Por favor, ingrese solo números.")
