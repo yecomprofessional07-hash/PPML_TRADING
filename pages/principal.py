@@ -142,6 +142,7 @@ if 'nuevo_usuario' in st.session_state and 'monto_inicial' in st.session_state:
     if 'image' in df.columns:
         fila_usuario = df[df['user'] == userName]
         acciones = fila_usuario.iloc[0]['acciones']
+        identidad = fila_usuario.iloc[0]['identidad']
         moneyInStocks = float(acciones)
         image = fila_usuario.iloc[0]['image']
 
@@ -151,16 +152,19 @@ elif 'usuario_registrado' in st.session_state:
     
     if 'monto' in df.columns and 'image' in df.columns:
         monto = fila_usuario.iloc[0]['monto']
+        identidad = fila_usuario.iloc[0]['identidad']
         acciones = fila_usuario.iloc[0]['acciones']
         image = fila_usuario.iloc[0]['image']
         moneyInStocks = float(acciones)
         budget = float(monto)
-
+st.session_state["identidad"] = identidad
 #moneyInStocks = float(monto)
 #userName = "user"                           # Valor dinámico: nombre de usuario
 #budget = 0 
 #image = 1                                 # Valor dinámico: presupuesto del usuario
 contador = 0
+estado = 1          #variable de estado para settings
+st.session_state["estado"] = estado
 
 #=============================== Funciones para los botones =============?=================#
 # Función para la ventana emergente

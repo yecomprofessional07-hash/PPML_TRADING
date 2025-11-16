@@ -9,6 +9,7 @@ st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered
 #=======Diccionarios=====#
 image = random.randint(1, 3)
 
+
 col1, col2, col3 = st.columns([4, 10, 4])
 with col2:
     with st.container(border = True):
@@ -52,15 +53,18 @@ with col2:
                     st.session_state['nuevo_usuario'] = user
                     st.session_state['monto_inicial'] = monto_numerico
                     
-                    # Crear lista
-                    lista_usuario = [user, password, monto, image]
-        
-        # Agregar al CSV
+                    #agregando dataframe
+
                     df = pd.read_csv('data/users.csv')
+                    ident = len(df)
+                    # Crear lista
+                    lista_usuario = [user, password, monto, image,ident]
+        
+    
                     nueva_fila = {'user': lista_usuario[0], 'password': lista_usuario[1], 
-                                  'monto':lista_usuario[2], 'image':lista_usuario[3]}
+                                  'monto':lista_usuario[2], 'image':lista_usuario[3],'identidad':lista_usuario[4]}
                     
-                    for col in df.columns[4:]:
+                    for col in df.columns[5:]:
                         nueva_fila[col] = 0
                     
                     df = pd.concat([df, pd.DataFrame([nueva_fila])], ignore_index=True)

@@ -4,12 +4,15 @@ import pandas as pd
 import time
 
 #=================================== Variables Globales ===================================#
-userName = "user"                           # Valor dinámico: nombre de usuario
-budget = 0                                  # Valor dinámico: presupuesto del usuario
-moneyInStocks = 0                           # Valor dinámico: dinero invertido en acciones
-image = 1                                   # Valor dinámico: imagen de perfil del usuario
-df = pd.DataFrame()                         # Valor dinámico: DataFrame con información del usuario
+df = pd.read_csv("data/users.csv")
 
+if 'identidad' in st.session_state:
+    id = st.session_state['identidad']
+    fila_usuario = df[df['identidad'] == id]
+    budget = fila_usuario.iloc[0]['monto']
+    moneyInStocks = fila_usuario.iloc[0]['acciones']
+    userName = fila_usuario.iloc[0]['user']
+    image = fila_usuario.iloc[0]['image']
 #=============================== Configuración de la página ===============================#
 st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
 
@@ -29,8 +32,8 @@ with col3:
     # Segunda columna: Información del usuario
     st.markdown(f"### {userName}")
     st.markdown(f"####")
-    st.metric(label="PRESUPUESTO", value=f"{budget}")
-    st.metric(label="DINERO EN ACCIONES", value=f"{moneyInStocks}")
+    st.metric(label="PRESUPUESTO", value=f"{budget:,.2f}")
+    st.metric(label="DINERO EN ACCIONES", value=f"{moneyInStocks:,.2f}")
 
 # Separador
 st.markdown("---")
@@ -66,7 +69,8 @@ if st.session_state.show_containerBudget:
         if st.button("Confirmar", key="confirmBudget"):
             # Actualiza el presupuesto
             budget += newBudget
-
+            df.loc[df['user'] == userName, 'monto'] = budget
+            df.to_csv('data/users.csv', index=False)
             # Muestra un mensaje de éxito
             st.success(f"Se han agregado L. {newBudget} a su presupuesto.")
 
@@ -81,11 +85,12 @@ if st.session_state.show_containerName:
     with st.container(border=True):
         # Campo de texto para cambiar el nombre de usuario
         newName = st.text_input("Ingrese su nuevo nombre de usuario", max_chars=20)
+
         if st.button("Confirmar", key="confirmName"):
             if newName.strip() != "":
                 # Actualiza el nombre de usuario
-                userName = newName
-
+                df.loc[df['identidad'] == id, 'user'] = newName
+                df.to_csv('data/users.csv', index=False)
                 # Muestra un mensaje de éxito
                 st.success(f"Su nombre de usuario ha sido cambiado a {newName}.")
 
