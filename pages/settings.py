@@ -5,7 +5,7 @@ import time
 
 #=================================== Variables Globales ===================================#
 df = pd.read_csv("data/users.csv")
-#columnas_positivas = []
+columnas_positivas = []
 
 if 'identidad' in st.session_state:
     id = st.session_state['identidad']
@@ -16,11 +16,11 @@ if 'identidad' in st.session_state:
     image = fila_usuario.iloc[0]['image']
 #=============================== Configuración de la página ===============================#
 st.set_page_config(page_title="Gestor de Trading Basado en ML", layout="centered")
-#for col in df.columns[6:]:
-    #if fila_usuario.iloc[0][col] > 0:
-       # columnas_positivas.append(col)
+for col in df.columns[6:]:
+    if fila_usuario.iloc[0][col] > 0:
+        columnas_positivas.append(col)
 
-#palabras = " ".join(columnas_positivas)
+palabras = " ".join(columnas_positivas)
 
 #====================================== Contenido principal ======================================#
 # ---> Primera fila: Título
@@ -44,7 +44,7 @@ with col3:
 # Separador
 st.markdown("---")
 
-st.markdown(f"#### Lista de empresas en su portafolio:")
+st.markdown(f"#### Lista de empresas en su portafolio: {palabras}")
 
 # Separador
 st.markdown("---")
