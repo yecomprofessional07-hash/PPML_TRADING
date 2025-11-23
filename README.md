@@ -26,8 +26,9 @@ Decisiones de Diseño:
         1.3 Streamlit Framework: Aplicación multipágina con recargas completas
         1.4 Modelo ML: uso de LogisticRegression con sklearn, pandas y numpy
     2. Estructura:
+    
         PPML_TRADING
-        |__Data
+        |__data
         |    |__users.csv
         |__model
         |    |__ __init__.py
