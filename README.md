@@ -15,11 +15,13 @@ Este proyecto es una plataforma interactiva de simulación bursátil, desarrolla
 El sistema simula un entorno de inversión donde cada usuario puede iniciar sesión, manejar su presupuesto, comprar o vender acciones, y visualizar métricas relevantes para las acciones a tomar por el usuario.
 
 Guía de instalación
+
     1. Clone el Repositorio github
     2. Haga pip install -r requirements.txt
     3. Haga python -m streamlit run app.py
 
 Decisiones de Diseño:
+
     1. Modelo Full-Stack Integrado: 
         1.1 Aplicacion Monolitica: Frontend y backend implementados en el mismo proyecto
         1.2 Datos importados: Yahoo finance proporciona datos historicos
