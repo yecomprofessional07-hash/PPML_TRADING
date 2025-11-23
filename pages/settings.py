@@ -5,6 +5,7 @@ import time
 
 #=================================== Variables Globales ===================================#
 df = pd.read_csv("data/users.csv")
+columnas_positivas = []
 
 if 'identidad' in st.session_state:
     id = st.session_state['identidad']
